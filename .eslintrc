@@ -1,0 +1,7 @@
+{
+
+  "extends": "airbnb-base",
+  "rules": {
+    "arrow-body-style": ["warn", "as-needed"],
+  }
+}
