@@ -17,7 +17,7 @@ mongoose.connect(mongodbUrl);
 const App = express();
 
 // App Setup
-// App.use(morgan('combined'));
+App.use(morgan('combined'));
 App.use(bodyParser.json({ type: '*/*' }));
 router(App);
 
