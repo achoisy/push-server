@@ -1,14 +1,16 @@
-import express from 'express';
-import http from 'http';
-import bodyParser from 'body-parser';
-import morgan from 'morgan'; // Logging framework for testing
-import mongoose from 'mongoose';
-import router from './router';
+const config = require('config');
+const express = require('express');
+const http = require('http');
+const bodyParser = require('body-parser');
+const morgan = require('morgan'); // Logging framework for testing
+const mongoose = require('mongoose');
 
-const config = require('./config');
+const router = require('./router');
+
 
 // Connect to Mongodb
-const mongodbUrl = config.MONGODB_CONNECT;
+const mongodbUrl = config.get('MONGODB_CONNECT');
+
 mongoose.Promise = global.Promise;
 mongoose.connect(mongodbUrl);
 
@@ -28,3 +30,5 @@ const port = process.env.PORT || 3090;
 const server = http.createServer(App);
 server.listen(port);
 console.log('Server listening on: ', port);
+
+module.exports = App; // for testing

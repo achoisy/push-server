@@ -1,9 +1,10 @@
-import passport from 'passport';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import LocalStrategy from 'passport-local';
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy;
+const { ExtractJwt } = require('passport-jwt');
+const LocalStrategy = require('passport-local');
 
-import User from '../models/user';
-import { secret } from '../config';
+const User = require('../models/user');
+const secret = require('config').get('SECRET_TOKEN_KEY');
 
 // Create Local strategy
 const loacOptions = { usernameField: 'email' };

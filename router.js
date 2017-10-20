@@ -1,14 +1,14 @@
-import passport from 'passport';
-import Authentication from './controllers/authentication';
-import passportService from './services/passport';
+const passport = require('passport');
+const Authentication = require('./routes/authentication');
+const passportService = require('./services/passport');
 
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', { session: false });
 
-export default function (app) {
+module.exports = (app) => {
   app.get('/', requireAuth, (req, res) => {
     res.send({ hi: 'there' });
   });
   app.post('/signin', requireSignin, Authentication.signin);
   app.post('/signup', Authentication.signup);
-}
+};

@@ -1,11 +1,11 @@
-import jwt from 'jwt-simple';
-import User from '../models/user';
+const jwt = require('jwt-simple');
+const User = require('../models/user');
 
-const config = require('../config');
+const secret = require('config').get('SECRET_TOKEN_KEY');
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
-  return jwt.encode({ sub: user.id, iat: timestamp }, config.SECRET_TOKEN_KEY);
+  return jwt.encode({ sub: user.id, iat: timestamp }, secret);
 }
 
 exports.signin = ({ user }, res, next) => {
