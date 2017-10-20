@@ -10,9 +10,8 @@ const router = require('./router');
 
 // Connect to Mongodb
 const mongodbUrl = config.get('MONGODB_CONNECT');
-
 mongoose.Promise = global.Promise;
-mongoose.connect(mongodbUrl);
+mongoose.connect(mongodbUrl, { useMongoClient: true });
 
 const App = express();
 
