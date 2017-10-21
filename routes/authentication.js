@@ -1,7 +1,6 @@
 const jwt = require('jwt-simple');
-const User = require('../models/user');
-
 const secret = require('config').get('SECRET_TOKEN_KEY');
+
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
@@ -14,21 +13,23 @@ exports.signin = ({ user }, res, next) => {
   return res.json({ token: tokenForUser(user) });
 };
 
-exports.signup = ({ body }, res, next) => {
-  const { email, password } = body;
 
-  if (!email || !password) {
-    return res.status(422).send({ error: 'You must provide email and password' });
+/*
+exports.signup = ({ body }, res, next) => {
+  const { login, password } = body;
+
+  if (!login || !password) {
+    return res.status(422).send({ error: 'Vous devez fournir un login et un mot de passe.' });
   }
   // See if duplicate email in user collection
-  User.findOne({ email: email.toLowerCase() }).exec()
+  User.findOne({ login }).exec()
     .then((existingUser) => {
       if (existingUser) {
         return null;
       }
 
       const user = new User({
-        email,
+        login,
         password,
       });
 
@@ -46,3 +47,4 @@ exports.signup = ({ body }, res, next) => {
     });
   return '';
 };
+*/
