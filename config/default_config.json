@@ -1,4 +1,10 @@
 {
   "MONGODB_CONNECT": "YOUR_MONGO_DB",
-  "SECRET_TOKEN_KEY": "SECRET_PHRASE"
+  "SECRET_TOKEN_KEY": "JWT_SECRET_PASSWORD",
+  "Onsignal" : {
+    "baseURL" : "https://onesignal.com",
+    "url" : "/api/v1/notifications",
+    "ONESIGNAL_REST_API_KEY" : "ONESIGNAL_REST_API_KEY",
+    "APP_ID": "onsignal_app_id"
+  }
 }

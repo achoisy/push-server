@@ -22,7 +22,7 @@ module.exports = (app) => {
     res.send({ hi: 'there Admin' });
   });
 
-  app.post('/admin/create', Admin.createNewAdmin); // NE PAS LAISSER UNE FOIS UTILISE
+  app.post('/admin/create', Admin.createNewAdmin); // HACK: uniquement pour init admin
   app.post('/admin/user', requireAdminAuth, User.createNewUser);
   // app.post('/signup', Authentication.signup);
 };

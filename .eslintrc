@@ -3,5 +3,6 @@
   "extends": "airbnb-base",
   "rules": {
     "arrow-body-style": ["warn", "as-needed"],
+    "prefer-destructuring":  1,
   }
 }
