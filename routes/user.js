@@ -31,15 +31,14 @@ exports.createNewUser = ({ body }, res, next) => {
   }, (err, result) => {
     if (!result) {
       // Tous les champs sont renseignés
-      userLib.addUser(userObjects, (liberr, newUser) => {
+      return userLib.addUser(userObjects, (liberr, newUser) => {
         if (liberr) {
           return res.status(500).send({ error: `Erreur à /route/authentication.js/userCreate:userLib.addUser msg:${liberr.error}` });
         }
         return res.json({ newUser, unhashPassword: userObjects.password });
       });
-    } else {
-      // le champ 'result' n'est pas renseigné
-      return res.status(422).send({ error: `Vous devez fournir le champ: ${Object.keys(result)}` });
     }
+    // le champ 'result' n'est pas renseigné
+    return res.status(422).send({ error: `Vous devez fournir le champ: ${Object.keys(result)}` });
   });
 };

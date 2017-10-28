@@ -16,12 +16,14 @@ module.exports = (app) => {
     res.send({ hi: 'there' });
   });
 
-  app.post('/signin', requireUserSignin, Authentication.signin);
+  // User routes
+  app.post('/signin', requireUserSignin, Authentication.userSignin);
+  app.get('/messsage', requireUserAuth,)
 
+  // Admin routes
   app.post('/admin', requireAdminSignin, (req, res) => {
     res.send({ hi: 'there Admin' });
   });
-
   app.post('/admin/create', Admin.createNewAdmin); // HACK: uniquement pour init admin
   app.post('/admin/user', requireAdminAuth, User.createNewUser);
   // app.post('/signup', Authentication.signup);

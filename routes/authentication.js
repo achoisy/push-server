@@ -7,13 +7,17 @@ function tokenForUser(user) {
   return jwt.encode({ sub: user.id, iat: timestamp }, secret);
 }
 
-exports.signin = ({ user }, res, next) => {
+exports.userSignin = ({ user }, res, next) => {
   // User has already had their email and password auth'd
   // We just need to give them a tokenForUser
   return res.json({ token: tokenForUser(user) });
 };
 
-
+exports.adminSignin = ({ user }, res, next) => {
+  // User has already had their email and password auth'd
+  // We just need to give them a tokenForUser
+  return res.json({ token: tokenForUser(user) });
+};
 /*
 exports.signup = ({ body }, res, next) => {
   const { login, password } = body;
