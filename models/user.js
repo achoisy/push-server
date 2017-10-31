@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   login: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   company: String,
+  logo: String,
   main_email: { type: String, lowercase: true },
   validation_emails: {},
   profil: {
