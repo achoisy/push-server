@@ -12,6 +12,12 @@ const messageSchema = new mongoose.Schema({
         logo: String,
         codepostal: String,
     },
+    status: String, // pending, send, reject, delayed
+    validation_send_to: [], // [{email:'useremail', token:'uniq_gen_token'},...]
+    validate_by: {
+        email: String,
+        validate_date: { type: Date},
+    },
     deliver_date: { type: Date, default: Date.now},
     create_date: { type: Date, default: Date.now },  
 });
