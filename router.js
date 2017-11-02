@@ -2,6 +2,7 @@ const passport = require('passport');
 const Authentication = require('./routes/authentication');
 const User = require('./routes/user');
 const Admin = require('./routes/admin');
+const Message = require('./routes/message');
 const passportService = require('./services/passport');
 
 const requireUserAuth = passport.authenticate('jwtUserLogin', { session: false });
@@ -18,7 +19,11 @@ module.exports = (app) => {
 
   // User routes
   app.post('/signin', requireUserSignin, Authentication.userSignin);
-  app.get('/messsage', requireUserAuth,)
+
+  app.post('/message', requireUserAuth, Message.create);
+  
+  // Validation message route
+  app.get('/validatemessage/:id/:token', Message.validate);
 
   // Admin routes
   app.post('/admin', requireAdminSignin, (req, res) => {

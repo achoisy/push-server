@@ -6,9 +6,10 @@ const userSchema = new mongoose.Schema({
   login: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   company: String,
+  coderef: String, // Alpha 3 code + code postal -- https://www.iso.org/obp/ui/fr/#search
   logo: String,
   main_email: { type: String, lowercase: true },
-  validation_emails: {},
+  validation_emails: [],
   profil: {
     titre: String,
     nom: String,

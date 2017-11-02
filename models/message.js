@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
+    coderef: { type: String, required: true },
     headings: {}, // {fr: 'Titre du message', en: 'message title'}
     contents: {}, // same here as above
     links: [], // [{position: 1, type:'image', url:'http://myimage.com/image.jpeg', description:'test image'},...]
@@ -10,7 +11,6 @@ const messageSchema = new mongoose.Schema({
         user_id: ObjectId,
         company: String,
         logo: String,
-        codepostal: String,
     },
     status: String, // pending, send, reject, delayed
     validation_send_to: [], // [{email:'useremail', token:'uniq_gen_token'},...]
