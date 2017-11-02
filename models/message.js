@@ -12,13 +12,13 @@ const messageSchema = new mongoose.Schema({
         company: String,
         logo: String,
     },
-    status: String, // pending, send, reject, delayed
+    status: String, // pending, sending, sended, reject, delayed
     validation_send_to: [], // [{email:'useremail', token:'uniq_gen_token'},...]
     validate_by: {
         email: String,
-        validate_date: { type: Date},
+        validate_date: { type: Date },
     },
-    deliver_date: { type: Date, default: Date.now},
+    deliver_date: { type: Date, default: Date.now },
     create_date: { type: Date, default: Date.now },  
 });
 

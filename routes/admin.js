@@ -36,7 +36,7 @@ exports.createNewAdmin = ({ body }, res, next) => {
         if (liberr) {
           return res.status(500).send({ error: `Erreur à /route/admin.js/createNewAdmin:adminLib.addAdmin msg:${liberr.error}` });
         }
-        const adminToken = tokenGen(newAdmin.id);
+        const adminToken = tokenGen.encode(newAdmin.id);
 
         return res.json({ newAdmin, unhashPassword: adminObjects.password, adminToken });
       });
