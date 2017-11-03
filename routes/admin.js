@@ -32,9 +32,9 @@ exports.createNewAdmin = ({ body }, res, next) => {
   }, (err, result) => {
     if (!result) {
       // Tous les champs sont renseignés
-      adminLib.addAdmin(adminObjects, (liberr, newAdmin) => {
+      adminLib.add(adminObjects, (liberr, newAdmin) => {
         if (liberr) {
-          return res.status(500).send({ error: `Erreur à /route/admin.js/createNewAdmin:adminLib.addAdmin msg:${liberr.error}` });
+          return res.status(500).send(`Erreur à /route/admin.js/createNewAdmin:adminLib.addAdmin msg:${liberr}`);
         }
         const adminToken = tokenGen.encode(newAdmin.id);
 
@@ -45,4 +45,13 @@ exports.createNewAdmin = ({ body }, res, next) => {
       return res.status(422).send({ error: `Vous devez fournir le champ: ${Object.keys(result)}` });
     }
   });
+};
+
+exports.deleteAdmin = ({ params: { id } }, res, next) => {
+    adminLib.delete(id, (liberr, delAdmin ) => {
+        if (liberr) {
+            return res.status(500).send(`Erreur /route/admin.js/deleteadmin:adminLib.delete mssg: ${liberr}`);
+        }
+        return res.json({ remove: delAdmin });
+    });
 };

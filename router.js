@@ -19,7 +19,6 @@ module.exports = (app) => {
 
   // User routes
   app.post('/signin', requireUserSignin, Authentication.userSignin);
-
   app.post('/message', requireUserAuth, Message.create);
   
   // Validation message route
@@ -29,7 +28,15 @@ module.exports = (app) => {
   app.post('/admin', requireAdminSignin, (req, res) => {
     res.send({ hi: 'there Admin' });
   });
-  app.post('/admin/create', Admin.createNewAdmin); // HACK: uniquement pour init admin
-  app.post('/admin/user', requireAdminAuth, User.createNewUser);
+  app.post('/admin/signin', requireAdminSignin, Authentication.adminSignin);
+  app.delete('/admin/:id', requireAdminAuth, Admin.deleteAdmin);
+  app.post('/admin/create', requireAdminAuth, Admin.createNewAdmin); // HACK: uniquement pour init admin
+  
+  // USER CRUD
+  app.post('/admin/user', requireAdminAuth, User.create); // Create User
+  app.get('/admin/user',requireAdminAuth, User.list);
+  app.get('/admin/user/:id', requireAdminAuth, User.getById);
+  app.delete('/admin/user/:id', requireAdminAuth, User.delById);
+  app.put('/admin/user/:id',requireAdminAuth, User.updateById);
   // app.post('/signup', Authentication.signup);
 };

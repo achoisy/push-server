@@ -20,7 +20,7 @@ function createUserObject({
 }
 
 // Create user with
-exports.createNewUser = ({ body }, res, next) => {
+exports.create = ({ body }, res, next) => {
   const userObjects = createUserObject(body);
 
   async.detect(userObjects, (userObject, callback) => { // Cherche les valeurs vides
@@ -31,9 +31,9 @@ exports.createNewUser = ({ body }, res, next) => {
   }, (err, result) => {
     if (!result) {
       // Tous les champs sont renseignés
-      return userLib.addUser(userObjects, (liberr, newUser) => {
+      userLib.add(userObjects, (liberr, newUser) => {
         if (liberr) {
-          return res.status(500).send({ error: `Erreur à /route/authentication.js/userCreate:userLib.addUser msg:${liberr.error}` });
+          return res.status(500).send(`Erreur à /route/user.js/create:userLib.add msg:${liberr.error}`);
         }
         return res.json({ newUser, unhashPassword: userObjects.password });
       });
@@ -42,3 +42,56 @@ exports.createNewUser = ({ body }, res, next) => {
     return res.status(422).send({ error: `Vous devez fournir le champ: ${Object.keys(result)}` });
   });
 };
+
+exports.list = (req , res, next) => {
+    userLib.getAll({}, (err, userList )=> {
+        if (err) {
+            if (err.message) {
+                return res.status(204).send(err.message);
+            }
+            return res.status(500).send(`Erreur à /route/user.js/list:userLib.get msg:${err}`);
+        }
+        
+        return res.status(200).json(userList);
+    });
+};
+
+exports.getById = ({ params: { id } }, res, next) => {
+    userLib.getById(id, (err, user )=> {
+        if (err) {
+            if (err.message) {
+                return res.status(204).send(err.message);
+            }
+            return res.status(500).send(`Erreur à /route/user.js/getById:userLib.getById msg:${err}`);
+        }
+        
+        return res.status(200).json(user);
+    });
+};
+
+exports.delById = ({ params: { id } }, res, next) => {
+    userLib.delById(id, (err, delUser) => {
+        if (err) {
+            if (err.message) {
+                return res.status(204).send(err.message);
+            }
+            return res.status(500).send(`Erreur à /route/user.js/delById:userLib.delById msg:${err}`);
+        }
+
+        return res.status(200).json(delUser);
+    });
+};
+
+exports.updateById = ({ params: { id }, body }, res, next) => {
+    userLib.updateById(id, body, (err, updateUser) => {
+       if (err) {
+           if (err.message) {
+               return res.status(204).send(err.message);
+           }
+           return res.status(500).send(`Erreur à /route/user.js/updateById:userLib.updateById msg:${err}`);
+       }
+       
+       return res.status(200).json(updateUser);
+    });
+};
+
