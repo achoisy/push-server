@@ -10,5 +10,11 @@
   "Mailgun" : {
     "MAILGUN_API_KEY": "mailgunapikey",
     "MAILGUN_DOMAIN": "mailgun_domain"
+  },
+  "Postmark" :{
+    "POSTMARK_API_KEY": "postmark_api_key"  
+  },
+  "Couchdb" :{
+    "COUCHDB_URL" : "http://admin:password@couchdb_url.com"  
   }
 }

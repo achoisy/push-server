@@ -7,7 +7,7 @@ const email = module.exports = {
   sendmail: ({ headings, contents, create_date }, email_to, validation_url, callback) => {
 
     // Send an email:
-    const client = new postmark.Client("3ded953e-0bb0-4cf2-b996-3b6a10b968ac"); // TODO: use config
+    const client = new postmark.Client(config.get('Postmark.POSTMARK_API_KEY')); // TODO: use config
 
     client.sendEmailWithTemplate({
         "From": "contact@maville.me",

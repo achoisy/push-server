@@ -13,6 +13,8 @@ const messageSchema = new mongoose.Schema({
         logo: String,
     },
     status: String, // pending, sending, sended, reject, delayed
+    couchdb: {},
+    notification: {},
     validation_send_to: [], // [{email:'useremail', token:'uniq_gen_token'},...]
     validate_by: {
         email: String,
