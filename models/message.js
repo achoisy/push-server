@@ -8,7 +8,7 @@ const messageSchema = new mongoose.Schema({
     contents: {}, // same here as above
     links: [], // [{position: 1, type:'image', url:'http://myimage.com/image.jpeg', description:'test image'},...]
     sender: {
-        user_id: ObjectId,
+        user_id: mongoose.Schema.Types.ObjectId,
         company: String,
         logo: String,
     },
