@@ -22,7 +22,7 @@ module.exports = (app) => {
   app.get('/validatemessage/:id/:token', Message.validate);
 
   // Admin routes
-  app.poszt('/admin/signin', requireAdminSignin, Authentication.adminSignin);
+  app.post('/admin/signin', requireAdminSignin, Authentication.adminSignin);
   app.delete('/admin/:id', requireAdminAuth, Admin.deleteAdmin);
   app.post('/admin/create', requireAdminAuth, Admin.createNewAdmin); // HACK: uniquement pour init admin
   
