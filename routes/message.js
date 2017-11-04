@@ -21,10 +21,19 @@ exports.validate = ({ params: { id, token}}, res, next) => {
     messageLib.validateMessage(id, token, (err, response) => {
        if (err) {
            return res.status(500).send({ 
-               error: `Erreur à /route/message validate.messageLib.validateMessage msg:${err.error}`
+               error: `Erreur msg:${err.error}`
            });
        } 
        
-       res.json({ response }); // TODO: create response template in html. use mustach temp engine
+       res.status(200).send("Merci pour la validation"); // TODO: create response template in html. use mustach temp engine
+       next();
+    });
+}
+
+exports.agenda = ({ params: { id } }, res, next) => {
+    messageLib.agenda(id, (err, response) => {
+       if (err) {
+           next(err);
+       } 
     });
 }

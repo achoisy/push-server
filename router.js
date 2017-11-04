@@ -13,9 +13,6 @@ const requireAdminSignin = passport.authenticate('localAdminLogin', { session: f
 
 
 module.exports = (app) => {
-  app.get('/', requireUserAuth, (req, res) => {
-    res.send({ hi: 'there' });
-  });
 
   // User routes
   app.post('/signin', requireUserSignin, Authentication.userSignin);
@@ -25,10 +22,7 @@ module.exports = (app) => {
   app.get('/validatemessage/:id/:token', Message.validate);
 
   // Admin routes
-  app.post('/admin', requireAdminSignin, (req, res) => {
-    res.send({ hi: 'there Admin' });
-  });
-  app.post('/admin/signin', requireAdminSignin, Authentication.adminSignin);
+  app.poszt('/admin/signin', requireAdminSignin, Authentication.adminSignin);
   app.delete('/admin/:id', requireAdminAuth, Admin.deleteAdmin);
   app.post('/admin/create', requireAdminAuth, Admin.createNewAdmin); // HACK: uniquement pour init admin
   

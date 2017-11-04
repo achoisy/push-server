@@ -10,13 +10,13 @@ const userSchema = new mongoose.Schema({
   logo: String,
   main_email: { type: String, lowercase: true },
   validation_emails: [],
+  timezone: String,
   profil: {
     titre: String,
     nom: String,
     prenom: String,
     telephone: {},
     mobile: {},
-    timezone: String,
   },
   address: {
     addressLine1: String,

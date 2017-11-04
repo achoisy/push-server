@@ -4,9 +4,16 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan'); // Logging framework for testing
 const mongoose = require('mongoose');
+const Agenda = require('agenda');
 
 const router = require('./router');
 
+// Setup and start agenda
+const mongoConnectionString = config.get('Agendadb'); 
+const agenda = new Agenda({db: {address: mongoConnectionString}, processEvery: '30 seconds'});
+agenda.on('ready', function() {
+  agenda.start();
+});
 
 // Connect to Mongodb
 const mongodbUrl = config.get('MONGODB_CONNECT');

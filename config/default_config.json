@@ -16,5 +16,6 @@
   },
   "Couchdb" :{
     "COUCHDB_URL" : "http://admin:password@couchdb_url.com"  
-  }
+  },
+  "Agendadb" : "mogodb_url"  
 }
