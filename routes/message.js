@@ -14,7 +14,7 @@ exports.create = ({ body, user }, res, next) => {
         res.json({ message });
         
     });
-}
+};
 
 exports.validate = ({ params: { id, token}}, res, next) => {
     // Validate message
@@ -28,7 +28,7 @@ exports.validate = ({ params: { id, token}}, res, next) => {
        res.status(200).send("Merci pour la validation"); // TODO: create response template in html. use mustach temp engine
        next();
     });
-}
+};
 
 exports.agenda = ({ params: { id } }, res, next) => {
     messageLib.agenda(id, (err, response) => {
@@ -36,4 +36,106 @@ exports.agenda = ({ params: { id } }, res, next) => {
            next(err);
        } 
     });
-}
+};
+
+exports.getAllByUserId = ({ query, user }, res, next) => {
+    const filter = { 'sender.user_id': user.id };
+    messageLib.get(filter, query, (err, msgList) => {
+       if  (err) {
+           return res.status(500).send({
+              error: `Erreur msg: ${err.error}` 
+           });
+       } 
+       
+       if (!msgList) {
+           return res.status(204).send({message: 'empty request'});
+       }
+       
+       return res.json({ msgList });
+    });
+};
+
+exports.getById = ({ params: { id }, query, user }, res, next) => {
+    const filter = { 'sender.user_id': user.id, '_id' : id };
+    messageLib.get(filter, query, (err, msg) => {
+        if (err) {
+            return res.status(500).send({
+              error: `Erreur msg: ${err.error}` 
+            });
+        } 
+        
+        if (!msg) {
+           return res.status(204).send({message: 'empty request'});
+        }
+
+        return res.json({ msg });
+    });
+};
+
+exports.getAdmin = ({ query }, res, next) => {
+    messageLib.get(query.query, query, (err, msgList) => {
+        if (err) {
+            return res.status(500).send({
+               error: `Erreur msg: ${err.error}` 
+            });
+        }
+        
+        if (!msg) {
+            return res.status(204).send({message: 'empty request'});
+        }
+        
+        return res.json({ msgList });
+    });
+};
+
+exports.getByIdAdmin = ({ params: { id }, query }, res, next) => {
+    const filter = { '_id' : id };
+    messageLib.get( filter, query, (err, msgList) => {
+        if (err) {
+            return res.status(500).send({
+               error: `Erreur msg: ${err.error}` 
+            });
+        }
+        
+        if (!msg) {
+            return res.status(204).send({message: 'empty request'});
+        }
+        
+        return res.json({ msgList });
+    });
+};
+
+exports.delById = ({ params: { id }, query, user }, res, next) => {
+    const filter = { 'sender.user_id': user.id, '_id' : id };
+    messageLib.del(filter, query, (err, msg) => {
+        if (err) {
+            return res.status(500).send({
+              error: `Erreur msg: ${err.error}` 
+            });
+        } 
+        
+        if (!msg) {
+           return res.status(204).send({message: 'empty request'});
+        }
+        
+        return res.status(200).send({ message: 'Message supprimé' });
+    });
+};
+
+exports.delByIdAdmin = ({ params: { id }, query, user }, res, next) => {
+    const filter = { '_id' : id };
+    messageLib.del(filter, query, (err, msg) => {
+        if (err) {
+            return res.status(500).send({
+              error: `Erreur msg: ${err.error}` 
+            });
+        } 
+        
+        if (!msg) {
+           return res.status(204).send({message: 'empty request'});
+        }
+        
+        return res.status(200).send({ message: 'Message supprimé' });
+    });
+};
+
