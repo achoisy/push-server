@@ -1,141 +1,197 @@
 // route for message
+const config = require('config');
+const Agenda = require('agenda');
 const messageLib = require('../lib/message');
 
-exports.create = ({ body, user }, res, next) => {
-    // Create new message
-    // Body: heading {}, contents {}, link[ type, url,description], deliver_date
-    messageLib.addMessage(body, user, (err, message) => {
-        if (err) {
-          return res.status(500).send({ 
-              error: `Erreur à /route/message create.messageLib.addMessage msg:${err.error}` 
-          });
-        }
-        
-        res.json({ message });
-        
-    });
+const mongoConnectionString = config.get('Agendadb');
+
+const agenda = new Agenda({
+  db: {
+    address: mongoConnectionString,
+  },
+});
+
+exports.create = ({
+  body,
+  user,
+}, res, next) => {
+  // Create new message
+  // Body: heading {}, contents {}, link[ type, url,description], deliver_date
+  messageLib.addMessage(body, user, (err, message) => {
+    if (err) {
+      return res.status(500).send(`Erreur à /route/message create.messageLib.addMessage msg:${JSON.stringify(err)}`);
+    }
+
+    return res.json({ create: true, message });
+  });
 };
 
-exports.validate = ({ params: { id, token}}, res, next) => {
-    // Validate message
-    messageLib.validateMessage(id, token, (err, response) => {
-       if (err) {
-           return res.status(500).send({ 
-               error: `Erreur msg:${err.error}`
-           });
-       } 
-       
-       res.status(200).send("Merci pour la validation"); // TODO: create response template in html. use mustach temp engine
-       next();
-    });
+exports.validate = ({
+  params: {
+    id,
+    token,
+  },
+}, res, next) => {
+  // Validate message
+  messageLib.validate(id, token, (err, response) => {
+    if (err) {
+      return res.status(500).send(`Erreur msg:${JSON.stringify(err)}`);
+    }
+
+    res.status(200).json({ validate: true, message: 'Merci pour la validation' }); // TODO: create response template in html. use mustach temp engine
+    return next();
+  });
 };
 
-exports.agenda = ({ params: { id } }, res, next) => {
-    messageLib.agenda(id, (err, response) => {
-       if (err) {
-           next(err);
-       } 
-    });
+exports.getAllByUserId = ({
+  querymen: {
+    cursor,
+    query,
+  },
+  user,
+}, res, next) => {
+  const filter = {
+    'sender.user_id': user.id,
+    ...query,
+  };
+  messageLib.get(filter, cursor, (err, msgList) => {
+    if (err) {
+      return res.status(500).send(`Erreur msg: ${JSON.stringify(err)}`);
+    }
+
+    if (!msgList) {
+      return res.status(204).json({ get: true, message: 'empty request' });
+    }
+
+    return res.json({ get: true, msgList });
+  });
 };
 
-exports.getAllByUserId = ({ query, user }, res, next) => {
-    const filter = { 'sender.user_id': user.id };
-    messageLib.get(filter, query, (err, msgList) => {
-       if  (err) {
-           return res.status(500).send({
-              error: `Erreur msg: ${err.error}` 
-           });
-       } 
-       
-       if (!msgList) {
-           return res.status(204).send({message: 'empty request'});
-       }
-       
-       return res.json({ msgList });
-    });
+exports.getById = ({
+  params: {
+    id,
+  },
+  querymen: {
+    cursor,
+  },
+  user,
+}, res, next) => {
+  const filter = {
+    'sender.user_id': user.id,
+    _id: id,
+  };
+  messageLib.get(filter, cursor, (err, msg) => {
+    if (err) {
+      return res.status(500).send({ error: `Erreur msg: ${err.error}` });
+    }
+
+    if (!msg) {
+      return res.status(204).json({ get: false, message: 'empty request' });
+    }
+
+    return res.json({ get: true, msg });
+  });
 };
 
-exports.getById = ({ params: { id }, query, user }, res, next) => {
-    const filter = { 'sender.user_id': user.id, '_id' : id };
-    messageLib.get(filter, query, (err, msg) => {
-        if (err) {
-            return res.status(500).send({
-              error: `Erreur msg: ${err.error}` 
-            });
-        } 
-        
-        if (!msg) {
-           return res.status(204).send({message: 'empty request'});
-        }
+exports.getAdmin = ({
+  querymen: {
+    query,
+    cursor,
+  },
+}, res, next) => {
+  messageLib.get(query, cursor, (err, msgList) => {
+    if (err) {
+      return res.status(500).send(`Erreur msg: ${JSON.stringify(err)}`);
+    }
 
-        return res.json({ msg });
-    });
+    if (!msgList) {
+      return res.status(204).json({ get: false, message: 'empty request' });
+    }
+
+    return res.json({ get: true, msgList });
+  });
 };
 
-exports.getAdmin = ({ query }, res, next) => {
-    messageLib.get(query.query, query, (err, msgList) => {
-        if (err) {
-            return res.status(500).send({
-               error: `Erreur msg: ${err.error}` 
-            });
-        }
-        
-        if (!msg) {
-            return res.status(204).send({message: 'empty request'});
-        }
-        
-        return res.json({ msgList });
-    });
+exports.getByIdAdmin = ({
+  params: {
+    id,
+  },
+  querymen: {
+    cursor,
+  },
+}, res, next) => {
+  const filter = {
+    _id: id,
+  };
+  messageLib.get(filter, cursor, (err, msgList) => {
+    if (err) {
+      return res.status(500).send(`Erreur msg: ${JSON.stringify(err)}`);
+    }
+
+    if (!msgList) {
+      return res.status(204).json({ get: false, message: 'empty request' });
+    }
+
+    return res.json({ get: true, msgList });
+  });
 };
 
-exports.getByIdAdmin = ({ params: { id }, query }, res, next) => {
-    const filter = { '_id' : id };
-    messageLib.get( filter, query, (err, msgList) => {
-        if (err) {
-            return res.status(500).send({
-               error: `Erreur msg: ${err.error}` 
-            });
-        }
-        
-        if (!msg) {
-            return res.status(204).send({message: 'empty request'});
-        }
-        
-        return res.json({ msgList });
-    });
+exports.delById = ({
+  params: {
+    id,
+  },
+  user,
+}, res, next) => {
+  const filter = {
+    'sender.user_id': user.id,
+    _id: id,
+  };
+  messageLib.del(filter, (err, msg) => {
+    if (err) {
+      return res.status(500).send(`Erreur msg: ${JSON.stringify(err)}`);
+    }
+
+    if (!msg) {
+      return res.status(204).json({ delete: false, message: 'empty request' });
+    }
+
+    return res.status(200).json({ delete: true, message: 'Message supprimé' });
+  });
 };
 
-exports.delById = ({ params: { id }, query, user }, res, next) => {
-    const filter = { 'sender.user_id': user.id, '_id' : id };
-    messageLib.del(filter, query, (err, msg) => {
-        if (err) {
-            return res.status(500).send({
-              error: `Erreur msg: ${err.error}` 
-            });
-        } 
-        
-        if (!msg) {
-           return res.status(204).send({message: 'empty request'});
-        }
-        
-        return res.status(200).send({ message: 'Message supprimé' });
-    });
+exports.delByIdAdmin = ({
+  params: {
+    id,
+  },
+  user,
+}, res, next) => {
+  const filter = {
+    _id: id,
+  };
+  messageLib.del(filter, (err, msg) => {
+    if (err) {
+      return res.status(500).send(`Erreur msg: ${JSON.stringify(err)}`);
+    }
+
+    if (!msg) {
+      return res.status(204).json({ delete: false, message: 'empty request' });
+    }
+
+    return res.status(200).json({ delete: true, message: 'Message supprimé' });
+  });
 };
 
-exports.delByIdAdmin = ({ params: { id }, query, user }, res, next) => {
-    const filter = { '_id' : id };
-    messageLib.del(filter, query, (err, msg) => {
-        if (err) {
-            return res.status(500).send({
-              error: `Erreur msg: ${err.error}` 
-            });
-        } 
-        
-        if (!msg) {
-           return res.status(204).send({message: 'empty request'});
-        }
-        
-        return res.status(200).send({ message: 'Message supprimé' });
-    });
-};
+exports.send = ({ params: { id } }, res, next) => {
+  messageLib.findById(id, (err, { deliver_date, _id }) => {
+    if (err || !_id) {
+      console.log('Message send err:', err);
+      next(err);
+    }
 
+    if (deliver_date <= Date.now()) { // TODO: update time delivery
+      agenda.now('PushMessage', { messageId: _id });
+    } else {
+      agenda.schedule(deliver_date, 'PushMessage', { messageId: _id });
+    }
+  });
+};

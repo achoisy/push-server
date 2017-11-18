@@ -1,4 +1,11 @@
 const passport = require('passport');
+const querymen = require('querymen'); // TODO: create schema
+const {
+  adminSearch,
+  messageSearchAdmin,
+  messageSearch,
+  userSearch,
+} = require('./services/querymen_schema');
 const Authentication = require('./routes/authentication');
 const User = require('./routes/user');
 const Admin = require('./routes/admin');
@@ -13,36 +20,35 @@ const requireAdminSignin = passport.authenticate('localAdminLogin', { session: f
 
 
 module.exports = (app) => {
-
   // User routes
   app.post('/signin', requireUserSignin, Authentication.userSignin);
-  
+
   // MESSAGE CRUD
   app.post('/message', requireUserAuth, Message.create);
-  app.get('/message', requireUserAuth, Message.getAllByUserId);
-  app.get('/message/:id', requireUserAuth, Message.getById);
+  app.get('/message', requireUserAuth, querymen.middleware(messageSearch), Message.getAllByUserId);
+  app.get('/message/:id', requireUserAuth, querymen.middleware(), Message.getById);
   app.delete('/message/:id', requireUserAuth, Message.delById);
-  app.put('/message/:id', requireUserAuth, Message.updateById); // TODO
-  
+  // app.put('/message/:id', requireUserAuth, Message.updateById); // TODO
+
   // Validation message route
-  app.get('/validatemessage/:id/:token', Message.validate);
+  app.get('/validatemessage/:id/:token', Message.validate, Message.send);
 
   // Admin routes
   app.post('/admin/signin', requireAdminSignin, Authentication.adminSignin);
+  app.get('/admin/', requireAdminAuth, querymen.middleware(adminSearch), Admin.getList);
   app.delete('/admin/:id', requireAdminAuth, Admin.deleteAdmin);
-  app.post('/admin/create', requireAdminAuth, Admin.createNewAdmin); // HACK: uniquement pour init admin
+  app.post('/admin/create', requireAdminAuth, Admin.createNewAdmin);
+  // app.post('/admin/create', Admin.createNewAdmin); // HACK: uniquement pour init admin
 
-  app.get('/admin/message', requireAdminAuth, Message.getAdmin);
-  app.get('/admin/message/:id', requireAdminAuth, Message.getByIdAdmin);
-  app.del('/admin/message/:id', requireAdminAuth, Message.delByIdAdmin);
-  app.put('/admin/message/:id',requireAdminAuth, Message.updateByIdAdmin); // TODO
-  
+  app.get('/admin/message', requireAdminAuth, querymen.middleware(messageSearchAdmin), Message.getAdmin);
+  app.get('/admin/message/:id', requireAdminAuth, querymen.middleware(), Message.getByIdAdmin);
+  app.delete('/admin/message/:id', requireAdminAuth, Message.delByIdAdmin);
+  // app.put('/admin/message/:id',requireAdminAuth, Message.updateByIdAdmin); // TODO
+
   // USER CRUD
   app.get('/admin/user/:id', requireAdminAuth, User.getById);
   app.delete('/admin/user/:id', requireAdminAuth, User.delById);
-  app.put('/admin/user/:id',requireAdminAuth, User.updateById);
+  app.put('/admin/user/:id', requireAdminAuth, User.updateById);
   app.post('/admin/user', requireAdminAuth, User.create); // Create User
-  app.get('/admin/user',requireAdminAuth, User.list);
-
-  // app.post('/signup', Authentication.signup);
+  app.get('/admin/user', requireAdminAuth, querymen.middleware(userSearch), User.list);
 };

@@ -8,5 +8,5 @@ exports.encode = (userId) => {
 };
 
 exports.decode = (token) => {
-  return jwt.decode(token, secret);  
+  return jwt.decode(token, secret);
 };
