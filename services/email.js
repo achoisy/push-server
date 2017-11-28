@@ -7,20 +7,20 @@ const email = {
     headings,
     contents,
     create_date,
-  }, email_to, validation_url, callback) => {
+  }, emailTo, validationUrl, callback) => {
     // Send an email:
     const client = new postmark.Client(config.get('Postmark.POSTMARK_API_KEY')); // TODO: use config
 
     client.sendEmailWithTemplate({
       From: 'contact@maville.me',
-      To: email_to,
+      To: emailTo,
       TemplateId: 3763462,
       TemplateModel: {
         product_name: 'product_name_Value',
         message_url: 'message_url_Value',
         heading: headings.fr,
         contents: contents.fr,
-        action_url: validation_url,
+        action_url: validationUrl,
         date: create_date, // TODO: use momentjs to have humain date format
       },
     }, (err, response) => {

@@ -4,17 +4,10 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan'); // Logging framework for testing
 const mongoose = require('mongoose');
+const cors = require('cors');
 const agenda = require('./services/agenda');
 
 const router = require('./router');
-
-// Setup and start agenda
-// const mongoConnectionString = config.get('Agendadb');
-// const agenda = new Agenda({ db: { address: mongoConnectionString }, processEvery: '30 seconds' });
-// agenda.on('ready', () => {
-//  console.log('Agenda connected!');
-//  agenda.start();
-// });
 
 // Connect to Mongodb
 const mongodbUrl = config.get('MONGODB_CONNECT');
@@ -30,6 +23,8 @@ if (config.util.getEnv('NODE_ENV') !== 'test') {
   App.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 }
 App.use(bodyParser.json({ type: '*/*' }));
+App.use(cors());// HACK: not necessery if using niginx proxy server
+
 router(App);
 
 // Server Setup

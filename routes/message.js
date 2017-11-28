@@ -15,6 +15,7 @@ exports.create = ({
   body,
   user,
 }, res, next) => {
+  console.log('body', body);
   // Create new message
   // Body: heading {}, contents {}, link[ type, url,description], deliver_date
   messageLib.addMessage(body, user, (err, message) => {
@@ -189,8 +190,10 @@ exports.send = ({ params: { id } }, res, next) => {
     }
 
     if (deliver_date <= Date.now()) { // TODO: update time delivery
+      console.log('Agenda Now');
       agenda.now('PushMessage', { messageId: _id });
     } else {
+      console.log('Agenda Schedule');
       agenda.schedule(deliver_date, 'PushMessage', { messageId: _id });
     }
   });
