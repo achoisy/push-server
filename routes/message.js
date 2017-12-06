@@ -17,7 +17,7 @@ exports.create = ({
 }, res, next) => {
   console.log('body', body);
   // Create new message
-  // Body: heading {}, contents {}, link[ type, url,description], deliver_date
+  // Body: heading {}, contents {}, links[ {type, url},...], images[{ filename, url},...], deliver_date
   messageLib.addMessage(body, user, (err, message) => {
     if (err) {
       return res.status(500).send(`Erreur à /route/message create.messageLib.addMessage msg:${JSON.stringify(err)}`);

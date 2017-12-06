@@ -9,7 +9,8 @@ const messageSchema = new mongoose.Schema({
   },
   headings: {}, // {fr: 'Titre du message', en: 'message title'}
   contents: {}, // same here as above
-  links: [], // [{position: 1, type:'image', url:'http://myimage.com/image.jpeg', description:'test image'},...]
+  links: [], // [{ type:'youtube', url:'http://myimage.com/youtubelink'},...]
+  images: [], // [{ filename: "hdvruxqo", url: "https://res.cloudinary.com/hdvruxqoou.jpg"}]
   sender: {
     user_id: mongoose.Schema.Types.ObjectId,
     company: String,
