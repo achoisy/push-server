@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   company: String,
   coderef: String, // Alpha 3 code + code postal -- https://www.iso.org/obp/ui/fr/#search
   logo: String,
+  description: String,
   main_email: { type: String, lowercase: true },
   validation_emails: [],
   timezone: String,
@@ -17,15 +18,6 @@ const userSchema = new mongoose.Schema({
     prenom: String,
     telephone: {},
     mobile: {},
-  },
-  address: {
-    addressLine1: String,
-    addressLine2: String,
-    codepostal: Number,
-    ville: String,
-    state: String,
-    pays: String,
-    countryCode: String,
   },
   create_date: { type: Date, default: Date.now },
 });

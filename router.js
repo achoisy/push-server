@@ -9,6 +9,7 @@ const {
 const Authentication = require('./routes/authentication');
 const User = require('./routes/user');
 const Admin = require('./routes/admin');
+const Pusher = require('./routes/pusher');
 const Message = require('./routes/message');
 const passportService = require('./services/passport');
 
@@ -20,6 +21,8 @@ const requireAdminSignin = passport.authenticate('localAdminLogin', { session: f
 
 
 module.exports = (app) => {
+  // Get Pushers lists
+  app.get('/pushers', querymen.middleware(), Pusher.getList);
   // User routes
   app.post('/signin', requireUserSignin, Authentication.userSignin);
 
@@ -39,6 +42,8 @@ module.exports = (app) => {
   app.delete('/admin/:id', requireAdminAuth, Admin.deleteAdmin);
   app.post('/admin/create', requireAdminAuth, Admin.createNewAdmin);
   // app.post('/admin/create', Admin.createNewAdmin); // HACK: uniquement pour init admin
+
+  app.post('/admin/pusher', requireAdminAuth, Pusher.create);
 
   app.get('/admin/message', requireAdminAuth, querymen.middleware(messageSearchAdmin), Message.getAdmin);
   app.get('/admin/message/:id', requireAdminAuth, querymen.middleware(), Message.getByIdAdmin);
