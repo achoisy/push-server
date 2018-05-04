@@ -4,6 +4,8 @@ const pusherSchema = new mongoose.Schema({
     pusher_name: String,
     description: String,
     logo: String,
+    suggestion: Boolean,
+    follow: Boolean,
     main_email: { type: String, lowercase: true },
     validation_emails: [],
     timezone: String,

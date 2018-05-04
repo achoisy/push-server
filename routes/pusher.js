@@ -20,10 +20,8 @@ exports.create = ({
     if (_.every(pusherObjects, pusherObject => pusherObject!== null)) {
         pusherLib.add(pusherObjects, (liberr, newPusher) => {
             if (liberr) {
-                console.log('hello1');
                 return res.status(500).json({ create: false, message:`Erreur à /route/pusher.js/createNewPusher:pusherLib.add msg:${JSON.stringify(liberr)}`});
             } else {
-                console.log('hello2');
                 return res.json({
                     create: true,
                     newPusher,
@@ -32,7 +30,6 @@ exports.create = ({
             
         })
     } else {
-        console.log('hello3');
         return res.status(422).json({ create: false, message: 'Vous devez fournir les champs obligatoires'});
     }
 };
@@ -51,7 +48,7 @@ exports.getList = ({
         if (!pusherList) {
             return res.status(204).json({ get: false, message: 'empty request' });
         }
-
+        // TODO: Should not return all info to user !!!!
         return res.json({ get: true, pusherList});
     });
 }
