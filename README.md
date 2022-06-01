@@ -15,6 +15,7 @@ Framework:
  
 Lib: 
  - Postmark (email delevery)
+ - Onsignal (Push notification)
 
 DB:
  - Pouchdb
